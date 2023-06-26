@@ -9,17 +9,27 @@
     <!-- Milligram CSS -->
     </span><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css"><span class="pln">
     
+    <!-- Personale CSS -->
+    <link rel="stylesheet" href="styles.css">
     <!-- You should properly set the path from the main file. --></span>
     <title>Pokedex Challenge</title>
 </head>
 <body>
-    <form id="search-bar">
-        <fieldset>
-          <label for="nameField">Name</label>
-          <input type="text" placeholder="CJ Patoilo" id="nameField">
-          <input class="button-primary" type="submit" value="Send">
-        </fieldset>
-      </form>
+    <div class="container">
+        <!-- Headers -->
+        <div>
+            <h1>Cerca un Pokemon</h1>
+        </div>
+        <form id="search_bar">
+            <fieldset>
+            <input type="text" placeholder="e.g. Charisard" id="pokemon_name" autofocus>
+            <input class="button-primary" type="submit" value="Cerca">
+            </fieldset>
+        </form>
+        <div id="pokemon_wrapper">
+
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
 </html>
