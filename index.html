@@ -17,23 +17,28 @@
 <body>
     <div class="container">
         <!-- Headers -->
-        <div>
+        <div id="main_header">
             <h1>Cerca un Pokemon</h1>
         </div>
         <form id="search_bar">
             <fieldset>
-            <input type="text" placeholder="e.g. Charisard" id="pokemon_name" autofocus>
+            <input type="text" placeholder="e.g. Charizard" id="pokemon_name" autofocus>
             <input class="button-primary" type="submit" value="Cerca">
             </fieldset>
         </form>
+        <!-- Main pokemon information -->
         <div id="pokemon_header"></div>
+        <!-- Image and statistics -->
         <div class="row" id="pokemon_wrapper">
-            <div class="column" id="pk_image_wrapper">
-            </div>
+            <div class="column column-80" id="pk_image_wrapper"></div>
+            <div class="column" id="pk_abilities_wrapper"></div>
+        </div>
 
-            <div class="column" id="pk_abilities_wrapper">
-            </div>
-
+        <!-- Button to add to pokedex -->
+        <div id="add_button_wrapper"></div>
+        <div id="pokedex_wrapper">
+            <h2>Il tuo Pokedex</h2>
+            <div id="pokedex_items_wrapper"></div>
         </div>
     </div>
     <script src="app.js"></script>

@@ -1,10 +1,16 @@
 .container {
-    margin-left: 2em;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
+
+
 
 /* pokemon image */
 .main_image {
-    width: 100%;
+    width: 60%;
+    border: 1px solid;
+    border-radius: 5%;
 }
 
 /* pokemon abilities */
@@ -12,4 +18,36 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+}
+
+/* pokedex */
+#pokedex_wrapper {
+    margin-top: auto;
+}
+
+#pokedex_items_wrapper {
+    background-color: rgb(219, 219, 219);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.pokemon_miniature_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+}
+
+.pokemon_miniature_wrapper > img {
+    width: 60px;
+}
+
+#delete_button {
+    font-size: 6px;
+    padding: 2px 4px; 
+    width: 80%;
+    height: 30px;
+
 }

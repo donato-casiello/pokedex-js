@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", searchPokemon)
+document.addEventListener("DOMContentLoaded", populatePokedex)
+
 
 // Search pokemon
 function searchPokemon(e) {
@@ -18,6 +20,8 @@ function searchPokemon(e) {
             createAndAppendHeader(pokemon)
             createAndAppendPokemonImage(pokemon.sprites.front_shiny)
             createAndAppendProgressBar(pokemon)
+            // create button to add to pokedex
+            createbtnToaddToPokedex(pokemon)
         } catch(error) {
             // clean container before append
             clearContainer("pk_abilities_wrapper")
@@ -64,12 +68,107 @@ function createAndAppendProgressBar(pokemon) {
          label.textContent = stat.stat.name
          pokemonAbilitiesWrapper.appendChild(label)
         // create the actual progress bar
-        let progressBar = document.createElement("progress")
+        const progressBar = document.createElement("progress")
         progressBar.max = 100
         progressBar.value = stat.base_stat
         pokemonAbilitiesWrapper.append(progressBar)
-       
     })
+}
+
+// button to add to pokedex
+function createbtnToaddToPokedex(pokemon) {
+    // remove previous button, if exists
+    const previousBtn = document.getElementById("add_button")
+    const btnWrapper = document.getElementById("add_button_wrapper")
+    if (previousBtn) {
+        btnWrapper.removeChild(previousBtn)
+    }
+    const btn = document.createElement("button")
+    btn.innerHTML = "Aggiungi al tuo pokedex"
+    btn.id = "add_button"
+    btnWrapper.append(btn)
+    // handle add to pokedex
+    btn.addEventListener("click", () => addToPokedex(pokemon))
+}
+
+// handle add to pokedex
+function addToPokedex(pokemon) {
+    // retrieve pokedex 
+    const pokedex = getPokedexFromLocalStorage()
+    if (pokedex.length >= 10) {
+        alert("Hai raggiunto il numero massimo di pokemon")
+        return 
+    }
+    // create pokemon miniature
+    createMiniatureForPokedex(pokemon)
+    addToLocalStorage(pokemon)
+}
+
+// handle the local storage
+function addToLocalStorage(pokemon) {
+    // Retrieve existing Pokémon list from localStorage or initialize an empty list
+    const existingPokedex = localStorage.getItem("pokedex")
+    const pokedex = existingPokedex ? JSON.parse(existingPokedex) : []
+    // Add the new Pokémon to the list
+    pokedex.push(pokemon)
+    // Convert the updated Pokémon list to JSON string
+    const updatedPokedex = JSON.stringify(pokedex)
+    localStorage.setItem('pokedex', updatedPokedex);
+
+}
+
+function getPokedexFromLocalStorage() {
+    const existingPokedex = localStorage.getItem("pokedex")
+    const pokedex = existingPokedex ? JSON.parse(existingPokedex) : []
+    return pokedex
+}
+
+function populatePokedex() {
+    // retrieve existing pokedex
+    const pokedex = getPokedexFromLocalStorage()
+    pokedex.forEach(pokemon => {
+        createMiniatureForPokedex(pokemon)
+    })
+}
+
+// create miniature for pokemon in the pokedex
+function createMiniatureForPokedex(pokemon) {
+    const pokemonMiniature = document.createElement("div")
+    pokemonMiniature.className = "pokemon_miniature_wrapper"
+    pokemonMiniature.id = `pokemon_miniature_wrapper_${pokemon.id}`
+        // create pokemon miniature image
+        const pokemonMiniatureImage = document.createElement("img")
+        pokemonMiniatureImage.src = pokemon.sprites.front_default
+        pokemonMiniatureImage.className = "pokemon_miniature_image"
+        // create pokemon name
+        const pokemonName = document.createElement("span")
+        pokemonName.innerHTML = pokemon.name
+        // create delete button
+        const deleteBtn = document.createElement("button")
+        deleteBtn.innerHTML = "Delete"
+        deleteBtn.id = "delete_button"
+        deleteBtn.addEventListener("click", () => deleteFromPokedex(pokemon))
+        // append to element
+        const pokedexWrapper = document.getElementById("pokedex_items_wrapper")
+        pokemonMiniature.append(pokemonMiniatureImage)
+        pokemonMiniature.append(pokemonName)
+        pokemonMiniature.append(deleteBtn)
+        pokedexWrapper.append(pokemonMiniature)
+}
+
+function deleteFromPokedex(deletedPokemon) {
+    // retrieve elements
+    const pokemonMiniature = document.getElementById(`pokemon_miniature_wrapper_${deletedPokemon.id}`)
+    const pokedexItemsWrapper = document.getElementById("pokedex_items_wrapper")
+    // remove from pokedex
+    pokedexItemsWrapper.removeChild(pokemonMiniature)
+    // remove from local storage
+    let pokedex = localStorage.getItem("pokedex")
+    pokedex = JSON.parse(pokedex)
+    let updatePokedex = [...pokedex].filter((pokemon) => pokemon.id != deletedPokemon.id)
+    updatePokedex = JSON.stringify(updatePokedex)
+    localStorage.setItem("pokedex", updatePokedex)
+    console.log(updatePokedex)
 }
 
 // clear the div before appending other elements
@@ -88,4 +187,5 @@ function clearContainer(container) {
         ctn.innerHTML = ""
     }
 }
+
 
