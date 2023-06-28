@@ -9,9 +9,10 @@ function searchPokemon(e) {
         e.preventDefault()
         const pokemonName = document.getElementById("pokemon_name")
         try {
-        let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName.value.toLowerCase()}/`)
-            let pokemon = await response.json()
+        // let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName.value.toLowerCase()}/`)
+        //     let pokemon = await response.json()
             // clean container before append
+            const pokemon = await fetchPokemon(pokemonName.value)
             clearContainer("pk_abilities_wrapper")
             clearContainer("pk_image_wrapper")
             clearContainer("pokemon_header")
@@ -37,6 +38,12 @@ function searchPokemon(e) {
         }
 
     })
+}
+
+async function fetchPokemon(name) {
+    let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}/`)
+    let pokemon = await response.json()
+    return pokemon
 }
 
 // create and append pokemon header 
@@ -123,6 +130,7 @@ function getPokedexFromLocalStorage() {
     return pokedex
 }
 
+// fill pokedex with pokemons
 function populatePokedex() {
     // retrieve existing pokedex
     const pokedex = getPokedexFromLocalStorage()
@@ -140,6 +148,29 @@ function createMiniatureForPokedex(pokemon) {
         const pokemonMiniatureImage = document.createElement("img")
         pokemonMiniatureImage.src = pokemon.sprites.front_default
         pokemonMiniatureImage.className = "pokemon_miniature_image"
+        pokemonMiniatureImage.id = pokemon.name
+        // create hiperlink for main page of each pokemon
+        const hiperLink = document.createElement("a")
+        hiperLink.addEventListener("click", async (e) => {
+            const name = e.target.id
+            console.log(name)
+            const newPokemon = await fetchPokemon(name)
+            // clear container before append
+            clearContainer("pk_abilities_wrapper")
+            clearContainer("pk_image_wrapper")
+            clearContainer("pokemon_header")
+            const search = document.getElementById("search_bar")
+            search.reset()
+            // create and append pokemon
+            createAndAppendHeader(newPokemon)
+            createAndAppendPokemonImage(newPokemon.sprites.front_shiny)
+            createAndAppendProgressBar(newPokemon)
+            // create button to add to pokedex
+            createbtnToaddToPokedex(newPokemon)
+
+        })
+        // insert image inside hiperlink
+        hiperLink.appendChild(pokemonMiniatureImage)
         // create pokemon name
         const pokemonName = document.createElement("span")
         pokemonName.innerHTML = pokemon.name
@@ -150,7 +181,7 @@ function createMiniatureForPokedex(pokemon) {
         deleteBtn.addEventListener("click", () => deleteFromPokedex(pokemon))
         // append to element
         const pokedexWrapper = document.getElementById("pokedex_items_wrapper")
-        pokemonMiniature.append(pokemonMiniatureImage)
+        pokemonMiniature.append(hiperLink)
         pokemonMiniature.append(pokemonName)
         pokemonMiniature.append(deleteBtn)
         pokedexWrapper.append(pokemonMiniature)

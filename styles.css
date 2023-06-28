@@ -40,7 +40,7 @@
     margin: auto;
 }
 
-.pokemon_miniature_wrapper > img {
+.pokemon_miniature_wrapper > a, img {
     width: 60px;
 }
 
