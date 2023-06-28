@@ -105,6 +105,9 @@ function addToPokedex(pokemon) {
     if (pokedex.length >= 10) {
         alert("Hai raggiunto il numero massimo di pokemon")
         return 
+    } else if (pokedex.some(p => p.id === pokemon.id)) {
+        alert("Questo Pokemon e gia presente nel tuo Pokedex")
+        return
     }
     // create pokemon miniature
     createMiniatureForPokedex(pokemon)
@@ -153,7 +156,6 @@ function createMiniatureForPokedex(pokemon) {
         const hiperLink = document.createElement("a")
         hiperLink.addEventListener("click", async (e) => {
             const name = e.target.id
-            console.log(name)
             const newPokemon = await fetchPokemon(name)
             // clear container before append
             clearContainer("pk_abilities_wrapper")
@@ -199,7 +201,6 @@ function deleteFromPokedex(deletedPokemon) {
     let updatePokedex = [...pokedex].filter((pokemon) => pokemon.id != deletedPokemon.id)
     updatePokedex = JSON.stringify(updatePokedex)
     localStorage.setItem("pokedex", updatePokedex)
-    console.log(updatePokedex)
 }
 
 // clear the div before appending other elements
