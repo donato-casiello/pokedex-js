@@ -5,4 +5,4 @@ Made in vanilla JS, [Milligram](https://milligram.io/) (CSS library) and [pokeap
 Informations are stored in local storage. 
 
 
-Deployed at https://fanciful-sorbet-75f958.netlify.app/
+Deployed at https://pokedex-256.netlify.app/
