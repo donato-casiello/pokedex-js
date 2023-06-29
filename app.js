@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", searchPokemon)
 document.addEventListener("DOMContentLoaded", populatePokedex)
 
 
+
+
 // Search pokemon
 function searchPokemon(e) {
     const search = document.getElementById("search_bar")
@@ -67,29 +69,44 @@ function createAndAppendHeader(pokemon) {
 function createAndAppendPokemonImage(imageSource) {
     let pokemonImage = document.createElement("img")
     pokemonImage.src = imageSource
-    pokemonImage.className = "main_image"
+    pokemonImage.id = "main_image"
     const pokemonWrapper = document.getElementById("pk_image_wrapper")
     pokemonWrapper.appendChild(pokemonImage)
 }
 
 // create and append toggle images button
 function createToggleImageButtons(pokemon) {
-    const imageWrapper = document.getElementById("pk_image_wrapper")
-    // create buttons
-    const defaultBtn = document.createElement("button")
-    const shinyBtn = document.createElement("button")
-    // give id for each buttons
-    defaultBtn.id = "default_image_button"
-    shinyBtn.id = "shiny_image_button"
-    // give a class name
-    defaultBtn.className = "button button-outline"
-    shinyBtn.className = "button button-outline"
-    // inner text
-    defaultBtn.innerHTML = "Default"
-    shinyBtn.innerHTML = "Shiny"
-    // append
-    imageWrapper.append(defaultBtn)
-    imageWrapper.append(shinyBtn)
+    const imageWrapper = document.getElementById("toggle_images_wrapper")
+    // create buttons wrapper
+    const buttonsWrapper = document.createElement("div")
+    buttonsWrapper.id = "toggle_image_buttons_wrapper"
+    const previousDefaultBtn = document.getElementById("default_image_button") 
+    // declaring the two buttons
+    let defaultBtn, shinyBtn
+        // not existing
+        if (previousDefaultBtn === null) {
+            // create buttons
+            defaultBtn = document.createElement("button")
+            shinyBtn = document.createElement("button")
+            // give id for each buttons
+            defaultBtn.id = "default_image_button"
+            shinyBtn.id = "shiny_image_button"
+            // give a class name
+            defaultBtn.className = "button button-outline"
+            shinyBtn.className = "button button-outline"
+            // inner text
+            defaultBtn.innerHTML = "Default"
+            shinyBtn.innerHTML = "Shiny"
+            // append buttons to div
+            buttonsWrapper.append(defaultBtn)
+            buttonsWrapper.append(shinyBtn)
+            // append div to image wrapper
+            imageWrapper.append(buttonsWrapper)
+        } else {
+            // already exists
+            defaultBtn = document.getElementById("default_image_button")
+            shinyBtn = document.getElementById("shiny_image_button")
+        }
     // add event listener
     defaultBtn.addEventListener("click", () => toggleImagesDefault(pokemon))
     shinyBtn.addEventListener("click", () => toggleImagesShiny(pokemon))
@@ -99,7 +116,7 @@ function toggleImagesDefault(pokemon) {
     clearContainer("pk_image_wrapper")
     let pokemonImage = document.createElement("img")
     pokemonImage.src = pokemon.sprites.front_default
-    pokemonImage.className = "main_image"
+    pokemonImage.id = "main_image"
     const pokemonWrapper = document.getElementById("pk_image_wrapper")
     pokemonWrapper.appendChild(pokemonImage)
     createToggleImageButtons(pokemon)
@@ -109,7 +126,7 @@ function toggleImagesShiny(pokemon) {
     clearContainer("pk_image_wrapper")
     let pokemonImage = document.createElement("img")
     pokemonImage.src = pokemon.sprites.front_shiny
-    pokemonImage.className = "main_image"
+    pokemonImage.id = "main_image"
     const pokemonWrapper = document.getElementById("pk_image_wrapper")
     pokemonWrapper.appendChild(pokemonImage)
     createToggleImageButtons(pokemon)
@@ -129,6 +146,7 @@ function createAndAppendProgressBar(pokemon) {
         progressBar.max = 100
         progressBar.value = stat.base_stat
         pokemonAbilitiesWrapper.append(progressBar)
+
     })
 }
 
@@ -226,7 +244,11 @@ function createMiniatureForPokedex(pokemon) {
         hiperLink.appendChild(pokemonMiniatureImage)
         // create pokemon name
         const pokemonName = document.createElement("span")
-        pokemonName.innerHTML = pokemon.name
+        const pokemonNameUncapitalized = pokemon.name
+        // capitalized name
+        const pokemonNameCapitalized = pokemonNameUncapitalized.charAt(0).toUpperCase() + pokemonNameUncapitalized.slice(1)
+        pokemonName.innerHTML = pokemonNameCapitalized
+        pokemonName.className = "miniature_name"
         // create delete button
         const deleteBtn = document.createElement("button")
         deleteBtn.innerHTML = "Delete"
@@ -234,10 +256,10 @@ function createMiniatureForPokedex(pokemon) {
         deleteBtn.addEventListener("click", () => deleteFromPokedex(pokemon))
         // append to element
         const pokedexWrapper = document.getElementById("pokedex_items_wrapper")
-        pokemonMiniature.append(hiperLink)
         pokemonMiniature.append(pokemonName)
-        pokemonMiniature.append(deleteBtn)
+        pokemonMiniature.append(hiperLink)
         pokedexWrapper.append(pokemonMiniature)
+        pokemonMiniature.append(deleteBtn)
 }
 
 function deleteFromPokedex(deletedPokemon) {
@@ -263,9 +285,7 @@ function clearContainer(container) {
         const headerToDelete = pokemonHeader.querySelectorAll("h2")
         // header exists
         if (headerToDelete.length > 0) {
-            console.log(headerToDelete)
             headerToDelete.forEach(header => {
-                console.log(header)
                 pokemonHeader.removeChild(header)
             })
             }
