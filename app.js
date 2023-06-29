@@ -31,11 +31,21 @@ function searchPokemon(e) {
             clearContainer("pokemon_header")
             search.reset()
             // create error div
-            let errorDiv = document.createElement("div")
+            let errorDiv = document.createElement("h2")
             errorDiv.innerHTML = "Pokemon not found"
-            const pokemonWrapper = document.getElementById("pk_abilities_wrapper")
+            errorDiv.id = "error_message"
+            const pokemonWrapper = document.getElementById("pokemon_header")
             pokemonWrapper.appendChild(errorDiv)
             console.log(error)
+            // remove buttons 
+            const buttonsWrapper = document.getElementById("toggle_image_buttons_wrapper")
+            if (buttonsWrapper) {
+                buttonsWrapper.remove();
+            }
+            const addButton = document.getElementById("add_button")
+            if (addButton) {
+                addButton.remove();
+            }
         }
 
     })
