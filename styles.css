@@ -4,16 +4,36 @@
     min-height: 100vh;
 }
 
+/* pokemon search ------------------------ */
+#search_bar, #search_bar > fieldset {
+    margin-bottom: 0px;
+}
 
 
-/* pokemon image */
+/* pokemon header */
+#pokemon_header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+#pokemon_header > h2 {
+    margin-right: 3em;
+}
+
+/* pokemon image ------------------------------*/
 .main_image {
-    width: 60%;
+    width: 50%;
     border: 1px solid;
     border-radius: 5%;
 }
 
-/* pokemon abilities */
+#pk_image_wrapper {
+    /* display: flex; */
+}
+
+/* pokemon abilities -------------------------- */
 #pk_abilities_wrapper {
     display: flex;
     flex-direction: column;

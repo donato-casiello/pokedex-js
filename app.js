@@ -9,8 +9,6 @@ function searchPokemon(e) {
         e.preventDefault()
         const pokemonName = document.getElementById("pokemon_name")
         try {
-        // let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName.value.toLowerCase()}/`)
-        //     let pokemon = await response.json()
             // clean container before append
             const pokemon = await fetchPokemon(pokemonName.value)
             clearContainer("pk_abilities_wrapper")
@@ -19,8 +17,9 @@ function searchPokemon(e) {
             search.reset()
             // create and append pokemon
             createAndAppendHeader(pokemon)
-            createAndAppendPokemonImage(pokemon.sprites.front_shiny)
+            createAndAppendPokemonImage(pokemon.sprites.front_default)
             createAndAppendProgressBar(pokemon)
+            createToggleImageButtons(pokemon)
             // create button to add to pokedex
             createbtnToaddToPokedex(pokemon)
         } catch(error) {
@@ -49,11 +48,19 @@ async function fetchPokemon(name) {
 // create and append pokemon header 
 function createAndAppendHeader(pokemon) {
     const pokemonHeader = document.getElementById("pokemon_header")
-    const header = document.createElement("h2")
+    const headerName = document.createElement("h2")
+    const headerWeight = document.createElement("h2")
+    const headerHeight = document.createElement("h2")
     // capitalized first letter of pokemon's name
     const capititalizedName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)
-    header.innerHTML = `NOME: ${capititalizedName}, PESO: ${pokemon.weight}, ALTEZZA: ${pokemon.height}`
-    pokemonHeader.append(header)
+    // header.innerHTML = `NOME: ${capititalizedName}, PESO: ${pokemon.weight}, ALTEZZA: ${pokemon.height}`
+    headerName.innerHTML = `Nome: ${capititalizedName}`
+    headerWeight.innerHTML = `Peso: ${pokemon.weight}`
+    headerHeight.innerHTML = `Altezza: ${pokemon.height}`
+    // append element
+    pokemonHeader.append(headerName)
+    pokemonHeader.append(headerWeight)
+    pokemonHeader.append(headerHeight)
 }
 
 // function to create and append pokemon image after fetching data
@@ -63,6 +70,49 @@ function createAndAppendPokemonImage(imageSource) {
     pokemonImage.className = "main_image"
     const pokemonWrapper = document.getElementById("pk_image_wrapper")
     pokemonWrapper.appendChild(pokemonImage)
+}
+
+// create and append toggle images button
+function createToggleImageButtons(pokemon) {
+    const imageWrapper = document.getElementById("pk_image_wrapper")
+    // create buttons
+    const defaultBtn = document.createElement("button")
+    const shinyBtn = document.createElement("button")
+    // give id for each buttons
+    defaultBtn.id = "default_image_button"
+    shinyBtn.id = "shiny_image_button"
+    // give a class name
+    defaultBtn.className = "button button-outline"
+    shinyBtn.className = "button button-outline"
+    // inner text
+    defaultBtn.innerHTML = "Default"
+    shinyBtn.innerHTML = "Shiny"
+    // append
+    imageWrapper.append(defaultBtn)
+    imageWrapper.append(shinyBtn)
+    // add event listener
+    defaultBtn.addEventListener("click", () => toggleImagesDefault(pokemon))
+    shinyBtn.addEventListener("click", () => toggleImagesShiny(pokemon))
+}
+
+function toggleImagesDefault(pokemon) {
+    clearContainer("pk_image_wrapper")
+    let pokemonImage = document.createElement("img")
+    pokemonImage.src = pokemon.sprites.front_default
+    pokemonImage.className = "main_image"
+    const pokemonWrapper = document.getElementById("pk_image_wrapper")
+    pokemonWrapper.appendChild(pokemonImage)
+    createToggleImageButtons(pokemon)
+}
+
+function toggleImagesShiny(pokemon) {
+    clearContainer("pk_image_wrapper")
+    let pokemonImage = document.createElement("img")
+    pokemonImage.src = pokemon.sprites.front_shiny
+    pokemonImage.className = "main_image"
+    const pokemonWrapper = document.getElementById("pk_image_wrapper")
+    pokemonWrapper.appendChild(pokemonImage)
+    createToggleImageButtons(pokemon)
 }
 
 // create and append progress bar for abilities
@@ -106,7 +156,7 @@ function addToPokedex(pokemon) {
         alert("Hai raggiunto il numero massimo di pokemon")
         return 
     } else if (pokedex.some(p => p.id === pokemon.id)) {
-        alert("Questo Pokemon e gia presente nel tuo Pokedex")
+        alert("Questo Pokemon è già presente nel tuo Pokedex")
         return
     }
     // create pokemon miniature
@@ -165,8 +215,9 @@ function createMiniatureForPokedex(pokemon) {
             search.reset()
             // create and append pokemon
             createAndAppendHeader(newPokemon)
-            createAndAppendPokemonImage(newPokemon.sprites.front_shiny)
+            createAndAppendPokemonImage(newPokemon.sprites.front_default)
             createAndAppendProgressBar(newPokemon)
+            createToggleImageButtons(pokemon)
             // create button to add to pokedex
             createbtnToaddToPokedex(newPokemon)
 
@@ -208,16 +259,19 @@ function clearContainer(container) {
     const ctn = document.getElementById(container)
     // to delete pokemon_header
     if (container === "pokemon_header") {
-        const headerToDelete = ctn.querySelectorAll("h2")
+        const pokemonHeader = document.getElementById("pokemon_header")
+        const headerToDelete = pokemonHeader.querySelectorAll("h2")
         // header exists
-        if (headerToDelete) {
+        if (headerToDelete.length > 0) {
+            console.log(headerToDelete)
             headerToDelete.forEach(header => {
-                header.innerHTML = ""
+                console.log(header)
+                pokemonHeader.removeChild(header)
             })
+            }
+        } else {
+            ctn.innerHTML = ""
         }
-    } else {
-        ctn.innerHTML = ""
-    }
 }
 
 
